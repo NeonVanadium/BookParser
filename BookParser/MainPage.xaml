@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="LightGray">
+        <TextBlock Text="Parse the Scarlet Letter" FontSize="40" HorizontalAlignment="Center"/>
+        <Frame Name="frame" Width="auto" Height="auto"/>
+        <!--
+        <ScrollViewer IsVerticalRailEnabled="True">
+            <TextBlock Name="ScarletLetter" TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </ScrollViewer>
+        -->
     </Grid>
 </Page>
