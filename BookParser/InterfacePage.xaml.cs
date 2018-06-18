@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,19 +24,32 @@ namespace BookParser
     public sealed partial class InterfacePage : Page
     {
 
-        private Parser p;
+        public Parser p;
 
         public InterfacePage()
         {
-            this.InitializeComponent();       
+            this.InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            test.Text = "Loading...";
-            p = new Parser("Assets/" + ((Button)sender).Content + ".txt");
-            test.Text = p.getAllChapters();
+            clearText();
+            p = new Parser("Assets/" + ((MenuFlyoutItem)sender).Text + ".txt");
+            ChapterDisplay.ItemsSource = p.chapters;
             TextStatsBlock.Text = p.fullTextWordTracker.getStats();
+        }
+
+        private void ChapterDisplay_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            WordTracker w = ((WordTracker)e.ClickedItem);
+            SectionTitleBlock.Text = w.name;
+            SectionInfoBlock.Text = w.getStats();
+        }
+
+        private void clearText()
+        {
+            SectionTitleBlock.Text = "";
+            SectionInfoBlock.Text = "(No section selected)";
         }
     }
 }

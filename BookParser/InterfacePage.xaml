@@ -11,22 +11,23 @@
         <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Margin" Value="10,10,10,10"/>
+            
         </Style>
 
         <Style TargetType="TextBlock" x:Key="TextStyle">
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="Margin" Value="10,10,10,10"/>
         </Style>
 
-        <DataTemplate x:DataType="local:WordTracker" x:Key="ChapterDataTemplate">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Name="Header" Style="{StaticResource TextStyle}" Text="{x:Bind name}"/>
-                <Button Style="{StaticResource ButtonStyle}" Content="Info"/>
+        <DataTemplate x:DataType="local:WordTracker" x:Key="ChapterDataTemplate" ScrollViewer.IsVerticalRailEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Margin="10,10,10,10" Width="300" Height="100">
+                <TextBlock Name="Header" Style="{StaticResource TextStyle}" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" TextAlignment="Left" HorizontalAlignment="Left" Text="{x:Bind name}"/>
             </StackPanel>
         </DataTemplate>
 
     </Page.Resources>
 
-    <Grid Background="Red">
+    <Grid Name="grid" Background="Gray">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -34,23 +35,33 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Button Style="{StaticResource ButtonStyle}" Content="The Scarlet Letter - Nathaniel Hawthorne" Click="Button_Click"/>
-            <Button Style="{StaticResource ButtonStyle}" Content="Druid - Jack Whitten" Click="Button_Click"/>
-            <Button Style="{StaticResource ButtonStyle}" Content="The Great Gatsby - F Scott Fitzgerald" Click="Button_Click"/>
-        </StackPanel>
 
-        <TextBlock Name="TextStatsBlock" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Grid.Column="0" Grid.Row="1" FontWeight="Bold" FontSize="30" Style="{StaticResource TextStyle}"/>
+        <Button Name="MenuButton" FontFamily="Segoe MDL2 Assets" Height="50" Width="50" FontSize="30" Content="&#xE700;">
+            <Button.Flyout>
+                <MenuFlyout Placement="Bottom">
+                    <MenuFlyoutItem Text="The Scarlet Letter - Nathaniel Hawthorne" Click="Button_Click"/>
+                    <MenuFlyoutItem Text="Druid - Jack Whitten" Click="Button_Click"/>
+                    <MenuFlyoutItem Text="The Great Gatsby - F Scott Fitzgerald" Click="Button_Click"/>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="1" IsVerticalRailEnabled="True">
-            <StackPanel Orientation="Vertical">
-                <GridView ItemsSource="{x:Bind p.chapters}" ItemTemplate="{StaticResource ChapterDataTemplate}"/>
-                <TextBlock Name="test" FontSize="18" TextWrapping="WrapWholeWords" VerticalAlignment="Center"/>
-            </StackPanel>
-        </ScrollViewer>
+        <TextBlock Name="TextStatsBlock" Margin="10,10,10,10"  VerticalAlignment="Center" TextWrapping="WrapWholeWords" Grid.Column="0" Grid.Row="1" FontWeight="Bold" FontSize="30" Style="{StaticResource TextStyle}"/>
+
+        <GridView Name="ChapterDisplay" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind p.chapters}" IsEnabled="True" ItemTemplate="{StaticResource ChapterDataTemplate}" IsItemClickEnabled="True" ItemClick="ChapterDisplay_ItemClick"/>
+
+        <RelativePanel Grid.Row="1" Grid.Column="2">
+
+            <TextBlock Name="SectionTitleBlock" Style="{StaticResource TextStyle}" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True" FontWeight="Bold"/>
+            <TextBlock Name="SectionInfoBlock" Style="{StaticResource TextStyle}" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="24" Grid.Row="2" Grid.Column="2" TextWrapping="WrapWholeWords" VerticalAlignment="Center"/>
+
+        </RelativePanel>
+
+        <TextBox Grid.Column="2" Width="auto" Margin="10,0,10,0" PlaceholderText="Enter a search term." FontSize="20" TextAlignment="Center"/>
+
     </Grid>
 </Page>

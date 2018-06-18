@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace BookParser
 {
-    class Parser
+    public class Parser
     {
         private string[] text;
         public ObservableCollection<WordTracker> chapters { get; } = new ObservableCollection<WordTracker>();
         private WordTracker curChapter;
         public WordTracker fullTextWordTracker { get; }
+        public string searchTerm { set; get; } = "";
 
         public static string[] trivialWords = new string[] //a few of the most common english words, with synonyms or other forms of said word on the same line
         {
@@ -88,7 +89,7 @@ namespace BookParser
                     foreach (String word in line.Split(' '))
                     {
                         if (isValid(word)) { //if this is an actual sequence of letters and not literal nothing
-                            fullTextWordTracker.addWord(word);
+                            fullTextWordTracker.addWord(format(word));
                             curChapter.addWord(format(word));
                         }     
                     }
@@ -137,7 +138,7 @@ namespace BookParser
         private bool endsInPunctuation(string word)
         {
             char final = word.Last();
-            if (final == ';' || final == ',' || final == '.' || final == '!' || final == '?' || final == ':' || final == '"' || final == ')')
+            if (final == ';' || final == ',' || final == '.' || final == '!' || final == '?' || final == ':' || final == '"' || final == ')' || final == '\'')
             {
                 return true;
             }
@@ -147,7 +148,7 @@ namespace BookParser
         private bool startsWithPunctuation(string word)
         {
             char first = word.First();
-            if(first == '"' || first == '(')
+            if(first == '"' || first == '(' || first == '\'')
             {
                 return true;
             }

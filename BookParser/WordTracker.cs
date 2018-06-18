@@ -53,7 +53,7 @@ namespace BookParser
                     }
                 }
             }
-
+            maxCountValue = Char.ToUpper(maxCountValue[0]) + maxCountValue.Substring(1);
             return (name + "\nNum. Words " + wordCount + "\nNum. Unique words: " + wordList.Count + "\nMost common non-trivial word(s): " + maxCountValue + "\nAverage word length: " + ("" + (Double)totalAlphabeticalCharacters / wordCount).Substring(0, 4) + "\n\n");
 
         }
