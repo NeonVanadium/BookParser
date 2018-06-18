@@ -37,6 +37,7 @@ namespace BookParser
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             clearText();
+            w = null;
             p = new Parser("Assets/" + ((MenuFlyoutItem)sender).Text + ".txt");
             ChapterDisplay.ItemsSource = p.chapters;
             TextStatsBlock.Text = p.fullTextWordTracker.getStats();
@@ -68,8 +69,12 @@ namespace BookParser
 
         private void TermSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!String.IsNullOrEmpty(SearchBox.Text))  p.searchTerm = SearchBox.Text;
-            updateText();
+            if (!String.IsNullOrEmpty(SearchBox.Text))
+            {
+                p.searchTerm = SearchBox.Text;
+                updateText();            
+            }
+
         }
 
         public static string getSearchTerm()
