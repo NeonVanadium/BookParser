@@ -32,9 +32,9 @@ namespace BookParser
                 "not",
                 "on",
                 "with",
-                "he",
+                "he", "his",
                 "as",
-                "you",
+                "you", "your",
                 "do", "does", "did",
                 "at",
                 "this",
@@ -42,10 +42,10 @@ namespace BookParser
                 "his", "him",
                 "by",
                 "from",
-                "they", "them",
+                "they", "them", "their", "theirs",
                 "we", "us",
                 "say", "said",
-                "her",
+                "her", "hers",
                 "she",
                 "or",
                 "will",
@@ -166,7 +166,7 @@ namespace BookParser
 
         private string format(string word) //formats/cleans the word
         {
-            word = word.Trim();
+            word = word.ToLower().Trim();
             while(endsInPunctuation(word))
             {
                 word = word.Substring(0, word.Length - 1);

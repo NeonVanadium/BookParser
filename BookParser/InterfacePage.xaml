@@ -9,9 +9,11 @@
 
     <Page.Resources>
         <Style TargetType="Button" x:Key="ButtonStyle">
+            <!--FontFamily="Segoe MDL2 Assets" Height="50" Width="50" FontSize="30" Content="&#xE700;"-->
             <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Margin" Value="10,10,10,10"/>
-            
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
         </Style>
 
         <Style TargetType="TextBlock" x:Key="TextStyle">
@@ -40,19 +42,28 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Name="MenuButton" FontFamily="Segoe MDL2 Assets" Height="50" Width="50" FontSize="30" Content="&#xE700;">
-            <Button.Flyout>
-                <MenuFlyout Placement="Bottom">
-                    <MenuFlyoutItem Text="The Scarlet Letter - Nathaniel Hawthorne" Click="Button_Click"/>
-                    <MenuFlyoutItem Text="Druid - Jack Whitten" Click="Button_Click"/>
-                    <MenuFlyoutItem Text="The Great Gatsby - F Scott Fitzgerald" Click="Button_Click"/>
-                </MenuFlyout>
-            </Button.Flyout>
-        </Button>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal">
+
+            <Button Name="MenuButton" Style="{StaticResource ButtonStyle}" Content="&#xE700;">
+                <Button.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem Text="The Scarlet Letter - Nathaniel Hawthorne" Click="Button_Click"/>
+                        <MenuFlyoutItem Text="Druid - Jack Whitten" Click="Button_Click"/>
+                        <MenuFlyoutItem Text="The Great Gatsby - F Scott Fitzgerald" Click="Button_Click"/>
+                        <MenuFlyoutItem Text="Jane Eyre - Charlotte Bronte" Click="Button_Click"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBlock Grid.Column="0" Style="{StaticResource TextStyle}" Margin="10,0,10,0" Text="Click here to select a text to parse." FontSize="20" TextAlignment="Center"/>
+        </StackPanel>
+
+        
 
         <TextBlock Name="TextStatsBlock" Margin="10,10,10,10"  VerticalAlignment="Center" TextWrapping="WrapWholeWords" Grid.Column="0" Grid.Row="1" FontWeight="Bold" FontSize="30" Style="{StaticResource TextStyle}"/>
 
-        <GridView Name="ChapterDisplay" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Bind p.chapters}" IsEnabled="True" ItemTemplate="{StaticResource ChapterDataTemplate}" IsItemClickEnabled="True" ItemClick="ChapterDisplay_ItemClick"/>
+        <GridView Name="ChapterDisplay" Grid.RowSpan="2" Grid.Column="1" ItemsSource="{x:Bind p.chapters}" IsEnabled="True" ItemTemplate="{StaticResource ChapterDataTemplate}" IsItemClickEnabled="True" ItemClick="ChapterDisplay_ItemClick"/>
 
         <RelativePanel Grid.Row="1" Grid.Column="2">
 
@@ -61,7 +72,16 @@
 
         </RelativePanel>
 
-        <TextBox Grid.Column="2" Width="auto" Margin="10,0,10,0" PlaceholderText="Enter a search term." FontSize="20" TextAlignment="Center"/>
+        <Grid Grid.Column="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Name="SearchBox" Grid.Column="0" Margin="10,0,10,0" PlaceholderText="Enter a search term." FontSize="20" TextAlignment="Center"/>
+            <Button Name="TermSearchButton" Grid.Column="1" Margin="0,0,10,0" Style="{StaticResource ButtonStyle}" RelativePanel.AlignRightWithPanel="True" Content="&#xE721;" Click="TermSearchButton_Click"/>
+        </Grid>
 
     </Grid>
 </Page>

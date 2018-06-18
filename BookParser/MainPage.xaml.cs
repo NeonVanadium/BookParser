@@ -26,7 +26,6 @@ namespace BookParser
         {
             this.InitializeComponent();
             frame.Navigate(typeof(InterfacePage));
-            //ScarletLetter.Text = System.IO.File.ReadAllText("Assets/scarletletter.txt");
         }
     }
 }

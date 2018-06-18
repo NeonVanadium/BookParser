@@ -24,11 +24,14 @@ namespace BookParser
     public sealed partial class InterfacePage : Page
     {
 
-        public Parser p;
+        public static InterfacePage cur;
+        public Parser p { get; set; }
+        private WordTracker w;
 
         public InterfacePage()
         {
             this.InitializeComponent();
+            cur = this;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -41,15 +44,37 @@ namespace BookParser
 
         private void ChapterDisplay_ItemClick(object sender, ItemClickEventArgs e)
         {
-            WordTracker w = ((WordTracker)e.ClickedItem);
-            SectionTitleBlock.Text = w.name;
-            SectionInfoBlock.Text = w.getStats();
+            w = ((WordTracker)e.ClickedItem);
+            updateText();
         }
 
         private void clearText()
         {
             SectionTitleBlock.Text = "";
             SectionInfoBlock.Text = "(No section selected)";
+            SearchBox.Text = "";
+        }
+
+        private void updateText()
+        {
+            if(w != null)
+            {
+                SectionTitleBlock.Text = w.name;
+                SectionInfoBlock.Text = w.getStats();
+            }
+            
+            TextStatsBlock.Text = p.fullTextWordTracker.getStats();
+        }
+
+        private void TermSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(!String.IsNullOrEmpty(SearchBox.Text))  p.searchTerm = SearchBox.Text;
+            updateText();
+        }
+
+        public static string getSearchTerm()
+        {
+            return cur.p.searchTerm;
         }
     }
 }

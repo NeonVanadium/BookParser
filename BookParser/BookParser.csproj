@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Druid - Jack Whitten.txt" />
+    <Content Include="Assets\Jane Eyre - Charlotte Bronte.txt" />
     <Content Include="Assets\The Great Gatsby - F Scott Fitzgerald.txt" />
     <Content Include="Assets\The Scarlet Letter - Nathaniel Hawthorne.txt" />
     <Content Include="Properties\Default.rd.xml" />
