@@ -10,7 +10,7 @@ namespace BookParser
     public class Parser
     {
         private string[] text;
-        public ObservableCollection<WordTracker> chapters { get; } = new ObservableCollection<WordTracker>();
+        public ObservableCollection<WordTracker> chapters { get; set; } = new ObservableCollection<WordTracker>();
         private WordTracker curChapter;
         public WordTracker fullTextWordTracker { get; }
         public string searchTerm { set; get; } = "";
@@ -102,11 +102,6 @@ namespace BookParser
 
         }
 
-        public string getTextStats()
-        {
-            return "";
-        }
-
         public string getAllChapters()
         {
             string all = "";
@@ -183,7 +178,6 @@ namespace BookParser
 
         public static bool isTrivialWord(string word)
         {
-
             foreach(string t in trivialWords)
             {
                 if(word.ToLower() == t.ToLower()) //if the word is in the list of trivial words
@@ -192,6 +186,34 @@ namespace BookParser
                 }
             }
             return false;
+        }
+
+        public void sortByPrevalence()
+        {
+            ObservableCollection<WordTracker> sorted = new ObservableCollection<WordTracker>();
+
+            int length = chapters.Count;
+            int highest;
+            WordTracker highestObj = null;
+            for(int i = 0; i < length; i++)
+            {
+                for(int j = 0; j < chapters.Count(); j++)
+                {
+                    highest = -1;
+                    if(chapters[j].sortValue() > highest)
+                    {
+                        highest = chapters[j].sortValue();
+                        highestObj = chapters[j];
+                    }
+                }
+
+                sorted.Add(highestObj);
+                chapters.Remove(highestObj);
+
+            }
+
+            InterfacePage.updateCurParserChapters(sorted);
+
         }
 
     }

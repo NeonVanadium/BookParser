@@ -34,6 +34,11 @@ namespace BookParser
             cur = this;
         }
 
+        public static void updateCurParserChapters(ObservableCollection<WordTracker> replacement)
+        {
+            cur.ChapterDisplay.ItemsSource = replacement;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             clearText();
@@ -69,12 +74,17 @@ namespace BookParser
 
         private void TermSearchButton_Click(object sender, RoutedEventArgs e)
         {
+            search();
+        }
+
+        private void search()
+        {
             if (!String.IsNullOrEmpty(SearchBox.Text))
             {
                 p.searchTerm = SearchBox.Text;
-                updateText();            
+                updateText();
+                p.sortByPrevalence();
             }
-
         }
 
         public static string getSearchTerm()

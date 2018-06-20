@@ -56,7 +56,7 @@
                 </Button.Flyout>
             </Button>
 
-            <TextBlock Grid.Column="0" Style="{StaticResource TextStyle}" Margin="10,0,10,0" Text="Click here to select a text to parse." FontSize="20" TextAlignment="Center"/>
+            <TextBlock Grid.Column="0" Style="{StaticResource TextStyle}" Margin="10,0,10,0" VerticalAlignment="Center" Text="Click here to select a text to parse." FontSize="20" TextAlignment="Center"/>
         </StackPanel>
 
         

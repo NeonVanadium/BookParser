@@ -82,5 +82,14 @@ namespace BookParser
             return toReturn;
         }
 
+        public int sortValue()
+        {
+            if (!wordList.ContainsKey(InterfacePage.getSearchTerm()))
+            {
+                return -1;
+            }
+            return wordList[InterfacePage.getSearchTerm()];
+        }
+
     }
 }
