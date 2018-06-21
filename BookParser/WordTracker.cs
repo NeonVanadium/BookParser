@@ -53,9 +53,17 @@ namespace BookParser
                     }
                 }
             }
-            maxCountValue = Char.ToUpper(maxCountValue[0]) + maxCountValue.Substring(1);
-            return (name + "\nNum. Words " + wordCount + "\nNum. Unique words: " + wordList.Count + "\nMost common non-trivial word(s): " + maxCountValue + "\nAverage word length: " + ("" + (Double)totalAlphabeticalCharacters / wordCount).Substring(0, 4) +  searchForTerm() + "\n\n");
+            //maxCountValue = Char.ToUpper(maxCountValue[0]) + maxCountValue.Substring(1);
 
+            string toReturn = name;
+            toReturn += "\nNum. Words " + wordCount;
+            toReturn += "\nNum. Unique words: " + wordList.Count;
+            toReturn += "\nMost common non-trivial word(s): " + maxCountValue.ToUpper();
+            toReturn += "\nTop three words related to each MCNTW:\n" + Parser.getRelatedWords(Parser.format(maxCountValue), 3);
+            toReturn += "\nAverage word length: " + ("" + (Double)totalAlphabeticalCharacters / wordCount).Substring(0, 4);
+            toReturn += searchForTerm();
+
+            return toReturn + "\n\n";
         }
 
         public string searchForTerm()
@@ -84,11 +92,11 @@ namespace BookParser
 
         public int sortValue()
         {
-            if (!wordList.ContainsKey(InterfacePage.getSearchTerm()))
+            if (!wordList.ContainsKey(Parser.format(InterfacePage.getSearchTerm())))
             {
                 return -1;
             }
-            return wordList[InterfacePage.getSearchTerm()];
+            return wordList[Parser.format(InterfacePage.getSearchTerm())];
         }
 
     }

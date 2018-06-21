@@ -59,6 +59,7 @@ namespace BookParser
             SectionTitleBlock.Text = "";
             SectionInfoBlock.Text = "(No section selected)";
             SearchBox.Text = "";
+            SearchQueryBlock.Text = "Search term: (None)";
         }
 
         private void updateText()
@@ -67,14 +68,22 @@ namespace BookParser
             {
                 SectionTitleBlock.Text = w.name;
                 SectionInfoBlock.Text = w.getStats();
+                
             }
             
             TextStatsBlock.Text = p.fullTextWordTracker.getStats();
+            if (!String.IsNullOrEmpty(p.searchTerm))
+            {
+                SearchQueryBlock.Text = "Search term: " + p.searchTerm.ToUpper() + "\n10 most related words:\n" + Parser.getRelatedWords(Parser.format(p.searchTerm),10);
+            }
         }
 
         private void TermSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            search();
+            if(p != null)
+            {
+                search();
+            }
         }
 
         private void search()

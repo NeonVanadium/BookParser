@@ -14,6 +14,9 @@ namespace BookParser
         private WordTracker curChapter;
         public WordTracker fullTextWordTracker { get; }
         public string searchTerm { set; get; } = "";
+        public static Dictionary<string, Dictionary<string, int>> relatopedia;
+        private LinkedList<string> wordList;  //for the last some number of words that have been visited
+        private static int listSize = 15;
 
         public static string[] trivialWords = new string[] //a few of the most common english words, with synonyms or other forms of said word on the same line
         {
@@ -24,20 +27,20 @@ namespace BookParser
                 "and",
                 "a", "an",
                 "in",
-                "that",
+                "that", "those",
                 "have", "has", "had",
                 "I", "me", "my", "mine",
-                "it", "its",
+                "it", "its", "it's",
                 "for",
                 "not",
                 "on",
                 "with",
                 "he", "his",
                 "as",
-                "you", "your",
-                "do", "does", "did",
+                "you", "your", "thou", "thine", "thee", "thy",
+                "do", "does", "did", "doing",
                 "at",
-                "this",
+                "this", "these",
                 "but",
                 "his", "him",
                 "by",
@@ -61,6 +64,7 @@ namespace BookParser
                 "if",
                 "some",
                 "may",
+                "do", "don't",
  
 
                 //other common ones
@@ -70,12 +74,15 @@ namespace BookParser
                 "one",
                 "than",
                 "then",
+                "no",
         };
 
         public Parser(string textPath)
         {
             text = System.IO.File.ReadAllLines(textPath);
             fullTextWordTracker = new WordTracker(textPath.Substring(textPath.IndexOf('/') + 1, textPath.Length - 4 - "Assets/".Length));
+            relatopedia = new Dictionary<string, Dictionary<string, int>>();
+            wordList = new LinkedList<string>();
 
             foreach(String line in text)
             {
@@ -89,8 +96,24 @@ namespace BookParser
                     foreach (String word in line.Split(' '))
                     {
                         if (isValid(word)) { //if this is an actual sequence of letters and not literal nothing
-                            fullTextWordTracker.addWord(format(word));
-                            curChapter.addWord(format(word));
+
+                            string formatted = format(word);
+
+                            if (!isTrivialWord(formatted)) //we only care about the connotations of non-trivial words
+                            {
+                                int distance = 0;
+                                foreach (string s in wordList)
+                                {
+                                    relatopediaAdd(formatted, s, listSize - distance);
+                                    relatopediaAdd(s, formatted, listSize - distance);
+                                    distance++;
+                                }
+
+                                enqueue(formatted);
+                            }
+                            
+                            fullTextWordTracker.addWord(formatted);
+                            curChapter.addWord(formatted);
                         }     
                     }
                 }
@@ -100,6 +123,95 @@ namespace BookParser
 
             //parse that boi
 
+        }
+
+        public static string getRelatedWords(string words, int amount)
+        {
+
+            string toWord;
+            string toReturn = "";
+            string temp = "";
+            bool newlined = true;
+
+            foreach (string s in words.Split('&'))
+            {
+
+                newlined = true;
+                if (toReturn != "")
+                {
+                    toReturn += "\n";
+                }
+
+                toWord = s.Trim();
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    if (toReturn != "" && !newlined)
+                    {
+                        toReturn += ", ";
+                    }
+
+                    if (relatopedia.ContainsKey(toWord))
+                    {
+                        int max = -1000;
+                        foreach (KeyValuePair<string, int> pair in relatopedia[toWord])
+                        {
+                            if (pair.Value > max && !toReturn.Contains(pair.Key.ToUpper()))
+                            {
+                                max = pair.Value;
+                                temp = pair.Key.ToUpper();
+                            }
+                        }
+                    }
+
+                    newlined = false;
+                    toReturn += temp;
+
+                }
+
+            }
+
+            if (toReturn == "")
+            {
+                return "(Word is non-existent or trivial)";
+            }
+            return toReturn;
+        }
+
+        private void enqueue(String word)
+        {
+            if(wordList.Count > listSize)
+            {
+                wordList.RemoveLast();
+            }
+
+            wordList.AddFirst(word);
+        }
+
+        private void relatopediaAdd(string key, string relateTo, int relation)
+        {
+            if(key == relateTo)//words should not relate to themselves
+            {
+                return;
+            }
+
+            if (relatopedia.ContainsKey(key))
+            {
+                if (relatopedia[key].ContainsKey(relateTo))
+                {
+                    relatopedia[key][relateTo] += relation;
+                }
+                else
+                {
+                    relatopedia[key][relateTo] = relation;
+                }
+            }
+            else
+            {
+                relatopedia[key] = new Dictionary<string, int>();
+                relatopedia[key].Add(relateTo, relation);
+            }
         }
 
         public string getAllChapters()
@@ -130,27 +242,7 @@ namespace BookParser
             return false;
         }
 
-        private bool endsInPunctuation(string word)
-        {
-            char final = word.Last();
-            if (final == ';' || final == ',' || final == '.' || final == '!' || final == '?' || final == ':' || final == '"' || final == ')' || final == '\'')
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool startsWithPunctuation(string word)
-        {
-            char first = word.First();
-            if(first == '"' || first == '(' || first == '\'')
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool isPossessive(string word)
+        private static bool isPossessive(string word)
         {
             if (word.EndsWith("'s"))
             {
@@ -159,14 +251,14 @@ namespace BookParser
             return false;
         }
 
-        private string format(string word) //formats/cleans the word
+        public static string format(string word) //formats/cleans the word
         {
             word = word.ToLower().Trim();
-            while(endsInPunctuation(word))
+            while(!Char.IsLetter(word[word.Length - 1]))//while the last element of the string isn't a letter
             {
                 word = word.Substring(0, word.Length - 1);
             }
-            while(startsWithPunctuation(word)){
+            while(!Char.IsLetter(word[0])){//while the first element of the string isn't a letter
                 word = word.Substring(1);
             }
             if (isPossessive(word))
@@ -188,31 +280,26 @@ namespace BookParser
             return false;
         }
 
-        public void sortByPrevalence()
+        public void sortByPrevalence() //sorts the list of chapters by the frequency of the current search term, with chapters that have no occurences sorted to the bottom
         {
-            ObservableCollection<WordTracker> sorted = new ObservableCollection<WordTracker>();
 
             int length = chapters.Count;
-            int highest;
-            WordTracker highestObj = null;
+            WordTracker temp = null;
+
             for(int i = 0; i < length; i++)
             {
-                for(int j = 0; j < chapters.Count(); j++)
+                for(int j = i; j < chapters.Count(); j++)
                 {
-                    highest = -1;
-                    if(chapters[j].sortValue() > highest)
+                    if(chapters[j].sortValue() > chapters[i].sortValue())
                     {
-                        highest = chapters[j].sortValue();
-                        highestObj = chapters[j];
+                        temp = chapters[i];
+                        chapters[i] = chapters[j];
+                        chapters[j] = temp;
                     }
                 }
-
-                sorted.Add(highestObj);
-                chapters.Remove(highestObj);
-
             }
 
-            InterfacePage.updateCurParserChapters(sorted);
+            InterfacePage.updateCurParserChapters(chapters);
 
         }
 
