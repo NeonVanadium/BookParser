@@ -46,7 +46,7 @@ namespace BookParser
                 "by",
                 "from",
                 "they", "them", "their", "theirs",
-                "we", "us",
+                "we", "us", "our", "ours",
                 "say", "said",
                 "her", "hers",
                 "she",
@@ -75,6 +75,8 @@ namespace BookParser
                 "than",
                 "then",
                 "no",
+                "who", "whom", "whose",
+                "can", "could",
         };
 
         public Parser(string textPath)
@@ -263,7 +265,7 @@ namespace BookParser
             }
             if (isPossessive(word))
             {
-                word = word.Substring(0, word.Length - 3);
+                word = word.Substring(0, word.Length - 2);
             }
             return word;
         }

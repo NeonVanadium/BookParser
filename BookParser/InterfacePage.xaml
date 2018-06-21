@@ -73,10 +73,18 @@
 
         <!---->
         
-        <TextBlock Name="TextStatsBlock" Margin="10,10,10,10"  VerticalAlignment="Center" TextWrapping="WrapWholeWords" Grid.Column="0" Grid.Row="1" FontWeight="Bold" FontSize="30" Style="{StaticResource TextStyle}"/>
-        <TextBlock Name="SearchQueryBlock" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Grid.Row="1" FontSize="25" Style="{StaticResource TextStyle}"/>
-
-        <GridView Name="ChapterDisplay" Grid.RowSpan="2" Grid.Column="1" ItemsSource="{x:Bind p.chapters}" IsEnabled="True" ItemTemplate="{StaticResource ChapterDataTemplate}" IsItemClickEnabled="True" ItemClick="ChapterDisplay_ItemClick" IsActiveView="True"/>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Name="SearchQueryBlock" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Grid.Row="0" FontSize="25" Style="{StaticResource TextStyle}"/>
+            <TextBlock Name="TextStatsBlock" Margin="10,10,10,10"  VerticalAlignment="Center" TextWrapping="WrapWholeWords" Grid.Column="0" Grid.Row="1" FontWeight="Bold" FontSize="30" Style="{StaticResource TextStyle}"/>
+            
+        </Grid>
+        
+                <GridView Name="ChapterDisplay" Grid.RowSpan="2" Grid.Column="1" ItemsSource="{x:Bind p.chapters}" IsEnabled="True" ItemTemplate="{StaticResource ChapterDataTemplate}" IsItemClickEnabled="True" ItemClick="ChapterDisplay_ItemClick" IsActiveView="True"/>
 
         <RelativePanel Grid.Row="1" Grid.Column="2">
 
